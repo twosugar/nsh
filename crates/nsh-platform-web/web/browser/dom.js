@@ -97,6 +97,15 @@ export function createDom(invoke, values, reactive, live, wake) {
         if (source && name in source) return source[name];
       }
     },
+    // `name in merged` must see the sources' keys: a merged object spread again into another merge (`<A {...props} x>`
+    // inside a component that got `props` spread) looks its keys up with `in`, which a proxy without `has` answers
+    // from its empty target.
+    has(_, name) {
+      return sources.some(source => {
+        const value = typeof source === "function" ? source() : source;
+        return value != null && name in value;
+      });
+    },
     ownKeys() { return [...new Set(sources.flatMap(source => Reflect.ownKeys((typeof source === "function" ? source() : source) ?? {})))]; },
     getOwnPropertyDescriptor(_, name) { return { enumerable: true, configurable: true }; },
   });

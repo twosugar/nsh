@@ -312,7 +312,7 @@ img.nsh-fill { pointer-events: none; }
 .nsh-spinner.spin { animation: nsh-spinner .8s steps(8) infinite; }
 .nsh-error { position: absolute; left: 8px; right: 8px; bottom: 8px; max-height: 45%; overflow: auto; z-index: 2000;
   background: #1e1f22; color: #fff; font: 12px/1.4 ui-monospace, Menlo, monospace; padding: 10px 12px;
-  border-left: 3px solid #ff6b6b; border-radius: 10px; white-space: pre-wrap; -webkit-user-select: text; user-select: text; }
+  border-radius: 10px; white-space: pre-wrap; -webkit-user-select: text; user-select: text; }
 .nsh-error-copy { float: right; position: sticky; top: 0; margin: 0 0 6px 10px; border: 0; border-radius: 6px;
   background: rgba(255,255,255,.12); color: #fff; font: 600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   padding: 4px 12px; cursor: pointer; }
