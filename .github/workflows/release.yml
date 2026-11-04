@@ -54,16 +54,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # The iOS runtimes and SDK need Xcode; the macOS runtime is built
-          # for this machine (Apple silicon).
-          - name: macos-arm64
-            os: macos-15
+          # pagehub: only the Linux package, for h5hub's CI.
           # 24.04 has GTK 4.14 and Pango 1.52+, what the Linux runtime needs;
           # its binaries need glibc 2.39 and GTK 4.14 or newer where they run.
           - name: linux-x86_64
             os: ubuntu-24.04
-          - name: windows-x86_64
-            os: windows-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -98,6 +93,17 @@ jobs:
       # QuickJS is C (bindgen needs libclang); the Linux runtime links GTK 4,
       # the GPUI runtime X11, Wayland, xkbcommon, fontconfig and FreeType,
       # GTK 3 and WebKitGTK 4.1 (web views) and GStreamer (videos).
+      # pagehub: the runner's disk filled up during `cargo xtask dist`.
+      - name: Free disk space
+        if: runner.os == 'Linux'
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost /usr/local/share/powershell \
+            /usr/local/lib/node_modules /opt/microsoft /opt/google /usr/lib/jvm/java-11* || true
+          sudo docker image prune --all --force > /dev/null || true
+          df -h /
+
       - name: Install clang, GTK 4 and GPUI's libraries
         if: runner.os == 'Linux'
         run: |
